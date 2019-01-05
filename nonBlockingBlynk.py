@@ -47,7 +47,7 @@ def main():
 	#This statement puts Blynk into a thread of its own 
 	thread.start_new_thread(BlynkLoop,() )
 
-	#Put your code here and cont worry about calling blynk.run, 
+	#Put your code here without the need to call blynk.run, 
 	#it's already running in a thread of it's own
 	value=0
 	while True:	
