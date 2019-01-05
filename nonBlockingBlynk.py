@@ -23,7 +23,7 @@ from time import sleep
 import thread
 global blynk
 
-BLYNK_AUTH = '60c3eaa1a4684f29945b4f9b7cc36d46'
+BLYNK_AUTH = 'yourtokenhere'
 
 blynk = BlynkLib.Blynk(BLYNK_AUTH)
 
