@@ -47,6 +47,7 @@
  (described above) to the new button (e.g. button3=15...). Lastly make susre you modify the below code replaying "button1"
  with "button3" or whatever name you gave to the global variable. 
  
+ ```python
  ##=======================================================================
  # Register virtual pin handler
  @blynk.VIRTUAL_WRITE(button1)
@@ -58,4 +59,4 @@
 	 else:
 	 	SwitchRF(button1RFRelayID, button1RFRelay, "RELAY", "OFF")
  ##=======================================================================
- 
+ ```
