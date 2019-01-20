@@ -16,6 +16,7 @@
  ensure a unique ID is assigned to each JemRF function. This program uses the following logic to try allocate a
  unique Device ID to each function:
  
+ ```python
  TMPA    - DeviceID
  TMPB    - DeviceID + 10
  TMPC    - DeviceID + 20
@@ -24,6 +25,7 @@
  ANAB    - DeviceID + 50
  HUM     - DeviceID + 60
  BATT    - DeviceID + 70
+ ```
  
  The above is not perfect and might overlap with device ID's if you have many JemRF Radio modules deployed. 
  You might need to chnage your device ID'same  so that the above deivice ID allocations work, or adjust 
@@ -38,9 +40,11 @@
  We have added code for two remote switches to this application but you can add more as follows. 
  Below you will see some configuration items for relay switches explained below:
  
+ ```python
  button1=13               - This is the Virtual ID of the Blynk button
  button1RFRelayID=3       - This is the JemRF Device ID of the radio module
  button1RFRelay="A"       - This is the Relay Port. JemRF modules support two relays per device (RELAYA and RELAYB)
+ ```
  
  If you want to add more than two Blynk buttons then add the following code at the bottom of this application source. 
  Make sure you change the "def v13_...." to the virtual device of the button in Blynk. Also create three new global variables
