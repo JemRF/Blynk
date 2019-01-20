@@ -1,4 +1,4 @@
-# Blynk
+# RF2BLYNK.PY
  Serial to Blynk 
  ===============
  Messages received through the serial port from JemRF wireless sensors are transformed
