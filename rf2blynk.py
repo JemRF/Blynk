@@ -96,7 +96,7 @@ global AllowExternalControl
 global terminalID
 
 #Once you have signed up for the Bylmk App you will receive a token which you insert here
-BLYNK_AUTH = 'YourTokenHere'
+#BLYNK_AUTH = 'YourTokenHere'
 
 # Remote Control
 #===============================================================================================
@@ -237,9 +237,9 @@ def main():
               
               dprint(time.strftime("%c")+ " " + llapMsg)
                               
-              if data.startswith('BUTTON') or data.startswith('STATEON'):
+              if data.startswith('BUTTONON') or data.startswith('STATEON'):
                   devID=str(int(devID)+30)
-                  sensordata=0
+                  sensordata=255
                   PEPFunction=26
 
               if data.startswith('BUTTONOFF') or data.startswith('STATEOFF'):
