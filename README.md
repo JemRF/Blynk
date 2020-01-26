@@ -5,11 +5,7 @@
  Messages received through the serial port from JemRF wireless sensors are transformed
  and sent to the Blynk server using the blynk.virtual_write(ID, Value) function.
  
- Mulithreading
- =============
- The Blynk python library is a blokcing library so this is a multithreaded application
- that runs the Blync processing in one thread and serial data processing in another.
- 
+
  Device ID Mapping
  ==================
  JemRF sensors can perform multiple functions (e.g. 3 temperature sensors, humidity, door switch, relay control, LED control)
@@ -52,16 +48,13 @@
  (described above) to the new button (e.g. button3=15...). Lastly make susre you modify the below code replaying "button1"
  with "button3" or whatever name you gave to the global variable. 
  
- ```python
- ##=======================================================================
- # Register virtual pin handler
- @blynk.VIRTUAL_WRITE(button1)
- def v13_write_handler(value):
-	 dprint('Current button value: {}'.format(value))
-	 if value=="0":
-                 #sensorID,         rfPort,   wirelessMessage, wCommand
-	 	SwitchRF(button1RFRelayID, button1RFRelay, "RELAY", "ON")
-	 else:
-	 	SwitchRF(button1RFRelayID, button1RFRelay, "RELAY", "OFF")
- ##=======================================================================
- ```
+# Register virtual pin handler
+@blynk.handle_event('write V13')
+def v13_write_handler(pin, value):
+  dprint('Current button value: {}'.format(value[0]))
+  if value[0]=="0":
+                #sensorID,         rfPort,   wirelessMessage, wCommand
+    SwitchRF(button1RFRelayID, button1RFRelay, "GPIO", "1")
+  else:
+    SwitchRF(button1RFRelayID, button1RFRelay, "GPIO", "0")
+
