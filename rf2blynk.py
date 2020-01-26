@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-rf2blynk.py v1 JemRF Sensor Interface to Blynk 
+rf2blynk.py v2 JemRF Sensor Interface to Blynk 
 ---------------------------------------------------------------------------------
  Works conjunction with host at www.Blynk.cc
  Visit https://www.jemrf.com/pages/documentation for full details                                 
