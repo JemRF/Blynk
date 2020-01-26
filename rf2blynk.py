@@ -15,6 +15,7 @@ rf2blynk.py v1 JemRF Sensor Interface to Blynk
 
  Revision History                                                                  
  V1.00 - Release
+ V2.00 - Upgraded for new blyklib library
  
  Instructions:
  =============
@@ -84,7 +85,7 @@ rf2blynk.py v1 JemRF Sensor Interface to Blynk
 """
 
 import serial
-import BlynkLib
+import blynklib
 import time
 from time import sleep
 global blynk
@@ -96,7 +97,7 @@ global AllowExternalControl
 global terminalID
 
 #Once you have signed up for the Bylmk App you will receive a token which you insert here
-#BLYNK_AUTH = 'YourTokenHere'
+BLYNK_AUTH = ''
 
 # Remote Control
 #===============================================================================================
@@ -115,7 +116,7 @@ button2RFRelay="B"
 
 PrintToScreen=True         #Set to True initially whiile testing. Set to False once it's working 
 Farenheit=False            #Set to True to convert all temperature readings from Celciud to Fahrenheit
-AllowExternalControl=False #This is a security setting. Set to True to allow external control of relays
+AllowExternalControl=True #This is a security setting. Set to True to allow external control of relays
                            #on the JEMRF modules.  
 
 terminalID=59              #This is for a Blynk termial widget. All messages will get sent to the terminal widget
@@ -123,7 +124,7 @@ terminalID=59              #This is for a Blynk termial widget. All messages wil
 
 # No more config needed...you are good to go!
                            
-blynk = BlynkLib.Blynk(BLYNK_AUTH)
+blynk = blynklib.Blynk(BLYNK_AUTH)
 
 def dprint(message):
 	global PrintToScreen
@@ -135,12 +136,6 @@ def dprint(message):
 #def my_user_task():
 	# do any non-blocking operations
 	# This works if you need it
-			
-def BlynkLoop():
-	global blynk
-	dprint("Blynk thread Started")
-	#blynk.set_user_task(my_user_task, 1000) #un-comment this line to enable the my_user_task function
-	blynk.run()
 
 def DoFahrenheitConversion(value):
 	global measure
@@ -197,23 +192,25 @@ def SwitchRF(sensorID, rfPort, wirelessMessage, wCommand):
 	
 def main():
   global measure
-
-  thread.start_new_thread(BlynkLoop,() )
+  global blynk
+  dprint("Blynk thread Started")
+  #thread.start_new_thread(BlynkLoop,() )
   sensordata=''
   currdevid=''
   # loop until the serial buffer is empty
 
   start_time = time.time()
 
-  #try:
+  # declare to variables, holding the com port we wish to talk to and the speed
+  port = '/dev/ttyAMA0'
+  baud = 9600
+
+  # open a serial connection using the variables above
+  ser = serial.Serial(port=port, baudrate=baud)
+
   while True:
-      # declare to variables, holding the com port we wish to talk to and the speed
-      port = '/dev/ttyAMA0'
-      baud = 9600
 
-      # open a serial connection using the variables above
-      ser = serial.Serial(port=port, baudrate=baud)
-
+      blynk.run()
       # wait for a moment before doing anything else
       sleep(0.2)        
       while ser.inWaiting():
@@ -295,7 +292,7 @@ def main():
                   currvalue=sensordata
                   currdevid=devID              
                   dprint("Sending data to Blynk:"+str(devID)+","+str(currvalue))
-                  blynk.virtual_write(str(devID), str(currvalue))
+                  blynk.virtual_write(devID, currvalue)
                   blynk.virtual_write(terminalID, str(devID)+" - "+str(currvalue)+" - "+time.strftime('%X %x\n'))
                 
           measure=''
@@ -308,23 +305,23 @@ def main():
           currdevid=""
 
 # Register virtual pin handler
-@blynk.VIRTUAL_WRITE(button1)
-def v13_write_handler(value):
-	dprint('Current button value: {}'.format(value))
-	if value=="0":
+@blynk.handle_event('write V13')
+def v13_write_handler(pin, value):
+  dprint('Current button value: {}'.format(value[0]))
+  if value[0]=="0":
                 #sensorID,         rfPort,   wirelessMessage, wCommand
-		SwitchRF(button1RFRelayID, button1RFRelay, "RELAY", "ON")
-	else:
-		SwitchRF(button1RFRelayID, button1RFRelay, "RELAY", "OFF")
+    SwitchRF(button1RFRelayID, button1RFRelay, "GPIO", "1")
+  else:
+    SwitchRF(button1RFRelayID, button1RFRelay, "GPIO", "0")
 
 
-@blynk.VIRTUAL_WRITE(button2)
-def v14_write_handler(value):
-	dprint('Current button value: {}'.format(value))
-	if value=="0":
-		SwitchRF(button2RFRelayID, button2RFRelay, "RELAY", "ON")
+@blynk.handle_event('write V14')
+def v14_write_handler(pin,value):
+	dprint('Current button value: {}'.format(value[0]))
+	if value[0]=="0":
+		SwitchRF(button2RFRelayID, button2RFRelay, "GPIO", "1")
 	else:
-		SwitchRF(button2RFRelayID, button2RFRelay, "RELAY", "OFF")
+		SwitchRF(button2RFRelayID, button2RFRelay, "GPIO", "0")
 
 #@blynk.VIRTUAL_READ(2)
 #def v62_read_handler():
